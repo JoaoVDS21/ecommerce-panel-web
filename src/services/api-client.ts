@@ -55,7 +55,7 @@ export const createService = <T>(endpoint: string) => {
       const response = await apiClient.get<T[]>(endpoint, config);
       return response.data;
     },
-    get: async (id: string, config?: AxiosRequestConfig) => {
+    get: async (id: string | number, config?: AxiosRequestConfig) => {
       const response = await apiClient.get<T>(`${endpoint}/${id}`, config);
       return response.data;
     },
@@ -63,11 +63,11 @@ export const createService = <T>(endpoint: string) => {
       const response = await apiClient.post<T>(endpoint, data, config);
       return response.data;
     },
-    update: async (id: string, data: Partial<T>, config?: AxiosRequestConfig) => {
+    update: async (id: string | number, data: Partial<T>, config?: AxiosRequestConfig) => {
       const response = await apiClient.put<T>(`${endpoint}/${id}`, data, config);
       return response.data;
     },
-    delete: async (id: string, config?: AxiosRequestConfig) => {
+    delete: async (id: string | number, config?: AxiosRequestConfig) => {
       const response = await apiClient.delete(`${endpoint}/${id}`, config);
       return response.data;
     },
