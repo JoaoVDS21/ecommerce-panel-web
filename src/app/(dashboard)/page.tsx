@@ -9,11 +9,6 @@ import { Package, UserCircle, Settings, Calendar } from 'lucide-react';
 export default function DashboardPage() {
   const router = useRouter();
 
-  useEffect(() => {
-    // Redirecionamento para a página de produtos
-    router.push('/products');
-  }, [router]);
-
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Dashboard</h1>

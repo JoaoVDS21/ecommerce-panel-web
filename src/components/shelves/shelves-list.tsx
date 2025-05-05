@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
-import { Category } from '@/types/category';
+import { Shelf } from '@/types/shelf'; 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { categoryService } from '@/services/category-service';
+import { shelfService } from '@/services/shelf-service';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,38 +27,38 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 
-interface CategoryListProps {
-  categories: Category[];
+interface ShelfListProps {
+  shelves: Shelf[];
 }
 
-export function CategoriesList({ categories }: CategoryListProps) {
+export function ShelvesList({ shelves }: ShelfListProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [categoryToDelete, setCategoryToDelete] = useState<string | number | null>(null);
+  const [shelfToDelete, setShelfToDelete] = useState<string | number | null>(null);
 
-  const { mutate: deleteCategory } = useMutation({
-    mutationFn: (id: string | number) => categoryService.delete(id),
+  const { mutate: deleteShelf } = useMutation({
+    mutationFn: (id: string | number) => shelfService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      toast.success('Categoria excluída', {
-        description: 'O categoria foi excluída com sucesso.'
+      queryClient.invalidateQueries({ queryKey: ['shelves'] });
+      toast.success('Prateleira excluída', {
+        description: 'O prateleira foi excluída com sucesso.'
       });
-      setCategoryToDelete(null);
+      setShelfToDelete(null);
     },
     onError: () => {
       toast.error('Erro ao excluir', {
-        description: 'Não foi possível excluir a categoria.'
+        description: 'Não foi possível excluir a prateleira.'
       });
     },
   });
 
   const handleDelete = (id: string | number) => {
-    setCategoryToDelete(id);
+    setShelfToDelete(id);
   };
 
   const confirmExclude = () => {
-    if (categoryToDelete) {
-      deleteCategory(categoryToDelete);
+    if (shelfToDelete) {
+      deleteShelf(shelfToDelete);
     }
   };
 
@@ -69,26 +69,28 @@ export function CategoriesList({ categories }: CategoryListProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
+              <TableHead>Posição</TableHead>
               <TableHead className="w-[100px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {categories.length === 0 ? (
+            {shelves.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center py-4">
-                  Nenhum categoria encontrada.
+                  Nenhum prateleira encontrada.
                 </TableCell>
               </TableRow>
             ) : (
-              categories.map((category) => (
-                <TableRow key={category.id}>
-                  <TableCell>{category.name}</TableCell>
+              shelves.map((shelf) => (
+                <TableRow key={shelf.id}>
+                  <TableCell>{shelf.title}</TableCell>
+                  <TableCell>{shelf.position}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => router.push(`/categories/${category.id}`)}
+                        onClick={() => router.push(`/shelves/${shelf.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -96,7 +98,7 @@ export function CategoriesList({ categories }: CategoryListProps) {
                         variant="outline"
                         size="icon"
                         className="text-red-500 hover:text-red-600"
-                        onClick={() => handleDelete(category.id)}
+                        onClick={() => handleDelete(shelf.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -109,12 +111,12 @@ export function CategoriesList({ categories }: CategoryListProps) {
         </Table>
       </div>
 
-      <AlertDialog open={!!categoryToDelete} onOpenChange={(open: boolean) => !open && setCategoryToDelete(null)}>
+      <AlertDialog open={!!shelfToDelete} onOpenChange={(open: boolean) => !open && setShelfToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir categoria</AlertDialogTitle>
+            <AlertDialogTitle>Excluir prateleira</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir esta prateleira? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

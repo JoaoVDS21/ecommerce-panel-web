@@ -16,9 +16,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { categoryService } from '@/services/category-service';
+import { shelfService } from '@/services/shelf-service';
 import { productService } from '@/services/product-service';
-import { Category, CategoryFormData } from '@/types/category';
+import { Shelf, ShelfFormData } from '@/types/shelf';
 import { Product } from '@/types/product';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -41,17 +41,18 @@ import {
 import { cn } from '@/lib/utils';
 
 // Schema de validação
-const categoryFormSchema = z.object({
-  name: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
+const shelfFormSchema = z.object({
+  title: z.string().min(3, 'O nome deve ter pelo menos 3 caracteres'),
+  position: z.coerce.number(),
   isActive: z.boolean().default(true),
   products_ids: z.array(z.number()).default([])
 });
 
-interface CategoryFormProps {
-  category?: Category;
+interface ShelfFormProps {
+  shelf?: Shelf;
 }
 
-export function CategoryForm({ category }: CategoryFormProps) {
+export function ShelfForm({ shelf }: ShelfFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
@@ -65,21 +66,23 @@ export function CategoryForm({ category }: CategoryFormProps) {
   
   // Configuração do formulário
   const form = useForm({
-    resolver: zodResolver(categoryFormSchema),
+    resolver: zodResolver(shelfFormSchema),
     defaultValues: {
-      name: '',
+      title: '',
+      position: 0,
       isActive: true,
       products_ids: [],
     },
   });
 
-  // Carrega os dados da categoria se estiver editando
+  // Carrega os dados da prateleira se estiver editando
   useEffect(() => {
-    if (category) {
+    if (shelf) {
       const reset = {
-        name: category.name,
-        isActive: category.isActive ?? true,
-        products_ids: category.products.map(({ id }) => id) ?? [],
+        title: shelf.title,
+        position: shelf.position,
+        isActive: shelf.isActive ?? true,
+        products_ids: shelf.products.map(({ id }) => id) ?? [],
       }
       
       form.reset(reset);
@@ -88,30 +91,30 @@ export function CategoryForm({ category }: CategoryFormProps) {
         setSelectedProductIds(reset.products_ids);
       }
     }
-  }, [category, form]);
+  }, [shelf, form]);
 
-  // Mutação para criar ou atualizar a categoria
-  const { mutate: salvarCategory, isPending } = useMutation({
-    mutationFn: (data: CategoryFormData) => {
-      if (category?.id) {
-        return categoryService.update(category.id, data);
+  // Mutação para criar ou atualizar a prateleira
+  const { mutate: salvarShelf, isPending } = useMutation({
+    mutationFn: (data: ShelfFormData) => {
+      if (shelf?.id) {
+        return shelfService.update(shelf.id, data);
       } else {
-        return categoryService.create(data);
+        return shelfService.create(data);
       }
     },
     onSuccess: () => {
-      toast.success(category ? 'Categoria atualizada' : 'Categoria criada', {
-        description: category 
-          ? 'A categoria foi atualizada com sucesso.' 
-          : 'A categoria foi criada com sucesso.',
+      toast.success(shelf ? 'Prateleira atualizada' : 'Prateleira criada', {
+        description: shelf 
+          ? 'A prateleira foi atualizada com sucesso.' 
+          : 'A prateleira foi criada com sucesso.',
       });
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      router.push('/categories');
+      queryClient.invalidateQueries({ queryKey: ['shelves'] });
+      router.push('/shelves');
     },
     onError: (error) => {
-      console.error('Erro ao salvar categoria:', error);
+      console.error('Erro ao salvar prateleira:', error);
       toast.error('Erro ao salvar', {
-        description: 'Ocorreu um erro ao salvar a categoria.'
+        description: 'Ocorreu um erro ao salvar a prateleira.'
       });
     },
   });
@@ -143,8 +146,8 @@ export function CategoryForm({ category }: CategoryFormProps) {
   };
 
   // Função de submit do formulário
-  const onSubmit = (data: CategoryFormData) => {
-    salvarCategory(data);
+  const onSubmit = (data: ShelfFormData) => {
+    salvarShelf(data);
   };
 
   return (
@@ -154,12 +157,26 @@ export function CategoryForm({ category }: CategoryFormProps) {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome</FormLabel>
+                  <FormLabel>Título</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nome da categoria" {...field} />
+                    <Input placeholder="Título da prateleira" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="position"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Posição</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Posição da prateleira na home" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -180,7 +197,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
                   <div className="space-y-1 leading-none">
                     <FormLabel>Ativa</FormLabel>
                     <FormDescription>
-                      Desmarque para desativar esta categoria
+                      Desmarque para desativar esta prateleira
                     </FormDescription>
                   </div>
                 </FormItem>
@@ -194,7 +211,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
                 <FormItem>
                   <FormLabel>Produtos</FormLabel>
                   <FormDescription>
-                    Selecione os produtos que pertencem a esta categoria
+                    Selecione os produtos que pertencem a esta prateleira
                   </FormDescription>
                   <FormControl>
                     <Popover open={open} onOpenChange={setOpen}>
@@ -278,12 +295,12 @@ export function CategoryForm({ category }: CategoryFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push('/categories')}
+                onClick={() => router.push('/shelves')}
               >
                 Cancelar
               </Button>
               <Button type="submit" disabled={isPending}>
-                {isPending ? 'Salvando...' : category ? 'Atualizar' : 'Criar'}
+                {isPending ? 'Salvando...' : shelf ? 'Atualizar' : 'Criar'}
               </Button>
             </div>
           </form>

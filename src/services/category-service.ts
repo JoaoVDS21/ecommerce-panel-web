@@ -1,4 +1,3 @@
-import { Product } from '@/types/product';
 import apiClient, { createService } from './api-client';
 import { Category } from '@/types/category';
 
@@ -8,8 +7,8 @@ const categoryBaseService = createService<Category>('/categories');
 export const categoryService = {
   ...categoryBaseService,
   
-  buscar: async (termo: string): Promise<Product[]> => {
-    const response = await apiClient.get<Product[]>(`/categories/busca?termo=${termo}`);
+  buscar: async (termo: string): Promise<Category[]> => {
+    const response = await apiClient.get<Category[]>(`/categories/busca?termo=${termo}`);
     return response.data;
   },
 };
