@@ -80,7 +80,7 @@ export function ProductForm({ product }: ProductFormProps) {
           : 'O produto foi criado com sucesso.',
       });
       queryClient.invalidateQueries({ queryKey: ['products'] });
-      router.push('/products');
+      router.push('/dashboard/products');
     },
     onError: (error) => {
       console.error('Erro ao salvar produto:', error);
@@ -192,7 +192,7 @@ export function ProductForm({ product }: ProductFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push('/products')}
+                onClick={() => router.push('/dashboard/products')}
               >
                 Cancelar
               </Button>

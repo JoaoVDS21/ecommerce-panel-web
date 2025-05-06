@@ -106,7 +106,7 @@ export function ProductsList({ products }: ProductListProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => router.push(`/products/${product.id}`)}
+                        onClick={() => router.push(`/dashboard/products/${product.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>

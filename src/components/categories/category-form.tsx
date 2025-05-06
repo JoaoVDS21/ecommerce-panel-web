@@ -106,7 +106,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
           : 'A categoria foi criada com sucesso.',
       });
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      router.push('/categories');
+      router.push('/dashboard/categories');
     },
     onError: (error) => {
       console.error('Erro ao salvar categoria:', error);
@@ -278,7 +278,7 @@ export function CategoryForm({ category }: CategoryFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push('/categories')}
+                onClick={() => router.push('/dashboard/categories')}
               >
                 Cancelar
               </Button>

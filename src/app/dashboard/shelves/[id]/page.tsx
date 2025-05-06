@@ -2,22 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import BannerForm from '@/components/banners/banner-form'; 
+import { ShelfForm } from '@/components/shelves/shelf-form'; 
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { bannerService } from '@/services/banner-service';
-import { Banner } from '@/types/banner';
+import { shelfService } from '@/services/shelf-service';
+import { Shelf } from '@/types/shelf';
 
-export default function EditBannerPage() {
+export default function EditShelfPage() {
   const params = useParams();
-  const bannerId = params.id as string;
+  const shelfId = params.id as string;
   
-  const { data: banner, isLoading, error } = useQuery<Banner>({
-    queryKey: ['banner', bannerId],
-    queryFn: () => bannerService.get(bannerId),
-    enabled: !!bannerId && bannerId !== 'novo',
+  const { data: shelf, isLoading, error } = useQuery<Shelf>({
+    queryKey: ['shelf', shelfId],
+    queryFn: () => shelfService.get(shelfId),
+    enabled: !!shelfId && shelfId !== 'novo',
   });
 
   if (isLoading) {
@@ -31,7 +31,7 @@ export default function EditBannerPage() {
   if (error) {
     return (
       <div className="p-4 rounded-md bg-red-50 text-red-700">
-        Erro ao carregar banner. Por favor, tente novamente.
+        Erro ao carregar prateleira. Por favor, tente novamente.
       </div>
     );
   }
@@ -39,15 +39,15 @@ export default function EditBannerPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Link href="/banners">
+        <Link href="/dashboard/shelves">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold">Editar Banner</h1>
+        <h1 className="text-2xl font-bold">Editar Prateleira</h1>
       </div>
       
-      <BannerForm params={{id: bannerId}} />
+      <ShelfForm shelf={shelf} />
     </div>
   );
 }

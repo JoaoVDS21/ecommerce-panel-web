@@ -2,22 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ProductForm } from '@/components/products/product-form'; 
+import BannerForm from '@/components/banners/banner-form'; 
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { productService } from '@/services/product-service';
-import { Product } from '@/types/product';
+import { bannerService } from '@/services/banner-service';
+import { Banner } from '@/types/banner';
 
-export default function EditProductPage() {
+export default function EditBannerPage() {
   const params = useParams();
-  const productId = params.id as string;
+  const bannerId = params.id as string;
   
-  const { data: product, isLoading, error } = useQuery<Product>({
-    queryKey: ['product', productId],
-    queryFn: () => productService.get(productId),
-    enabled: !!productId && productId !== 'novo',
+  const { data: banner, isLoading, error } = useQuery<Banner>({
+    queryKey: ['banner', bannerId],
+    queryFn: () => bannerService.get(bannerId),
+    enabled: !!bannerId && bannerId !== 'novo',
   });
 
   if (isLoading) {
@@ -31,7 +31,7 @@ export default function EditProductPage() {
   if (error) {
     return (
       <div className="p-4 rounded-md bg-red-50 text-red-700">
-        Erro ao carregar produto. Por favor, tente novamente.
+        Erro ao carregar banner. Por favor, tente novamente.
       </div>
     );
   }
@@ -39,15 +39,15 @@ export default function EditProductPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Link href="/products">
+        <Link href="/dashboard/banners">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold">Editar Produto</h1>
+        <h1 className="text-2xl font-bold">Editar Banner</h1>
       </div>
       
-      <ProductForm product={product} />
+      <BannerForm params={{id: bannerId}} />
     </div>
   );
 }

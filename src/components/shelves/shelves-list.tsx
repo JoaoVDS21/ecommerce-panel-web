@@ -97,7 +97,7 @@ export function ShelvesList({ shelves }: ShelfListProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => router.push(`/shelves/${shelf.id}`)}
+                        onClick={() => router.push(`/dashboard/shelves/${shelf.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>

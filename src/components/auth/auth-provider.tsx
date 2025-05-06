@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       if (!isAuthenticated && !isPublicRoute) {
         router.push('/login');
       } else if (isAuthenticated && isPublicRoute) {
-        router.push('/products');
+        router.push('/dashboard/products');
       }
       
       setIsLoading(false);

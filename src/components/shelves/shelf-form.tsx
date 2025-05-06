@@ -109,7 +109,7 @@ export function ShelfForm({ shelf }: ShelfFormProps) {
           : 'A prateleira foi criada com sucesso.',
       });
       queryClient.invalidateQueries({ queryKey: ['shelves'] });
-      router.push('/shelves');
+      router.push('/dashboard/shelves');
     },
     onError: (error) => {
       console.error('Erro ao salvar prateleira:', error);
@@ -295,7 +295,7 @@ export function ShelfForm({ shelf }: ShelfFormProps) {
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => router.push('/shelves')}
+                onClick={() => router.push('/dashboard/shelves')}
               >
                 Cancelar
               </Button>

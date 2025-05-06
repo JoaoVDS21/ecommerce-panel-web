@@ -9,7 +9,7 @@ export default function newProductPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Link href="/products">
+        <Link href="/dashboard/products">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-5 w-5" />
           </Button>

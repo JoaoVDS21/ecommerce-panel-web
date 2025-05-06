@@ -95,7 +95,7 @@ export function CategoriesList({ categories }: CategoryListProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => router.push(`/categories/${category.id}`)}
+                        onClick={() => router.push(`/dashboard/categories/${category.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>

@@ -3,30 +3,35 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Package, Grid, Rows3, Images } from 'lucide-react';
+import { Package, Grid, Rows3, Images, LayoutDashboard } from 'lucide-react';
 
 export function Sidebar() {
   const pathname = usePathname();
 
   const navItems = [
     {
+      name: 'Dashboard',
+      href: '/dashboard',
+      icon: LayoutDashboard,
+    },
+    {
       name: 'Produtos',
-      href: '/products',
+      href: '/dashboard/products',
       icon: Package,
     },
     {
       name: 'Categorias',
-      href: '/categories',
+      href: '/dashboard/categories',
       icon: Grid,
     },
     {
       name: 'Prateleiras',
-      href: '/shelves',
+      href: '/dashboard/shelves',
       icon: Rows3,
     },
     {
       name: 'Banners',
-      href: '/banners',
+      href: '/dashboard/banners',
       icon: Images,
     },
   ];
@@ -40,7 +45,7 @@ export function Sidebar() {
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
           {navItems.map((item) => {
-            const isActive = pathname.startsWith(item.href);
+            const isActive = item.href === '/dashboard' ? pathname.endsWith(item.href) : pathname.startsWith(item.href);
             const Icon = item.icon;
 
             return (

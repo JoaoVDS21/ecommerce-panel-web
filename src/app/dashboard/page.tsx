@@ -14,7 +14,7 @@ export default function DashboardPage() {
       <h1 className="text-3xl font-bold">Dashboard</h1>
       
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push('/products')}>
+        <Card className="cursor-pointer hover:shadow-md transition-shadow" onClick={() => router.push('/dashboard/products')}>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
             <CardTitle className="text-sm font-medium">Produtos</CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
@@ -68,7 +68,7 @@ export default function DashboardPage() {
       </div>
       
       <div className="flex justify-center">
-        <Button onClick={() => router.push('/products')}>
+        <Button onClick={() => router.push('/dashboard/products')}>
           Ir para Produtos
         </Button>
       </div>

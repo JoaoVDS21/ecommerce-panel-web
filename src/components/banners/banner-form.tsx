@@ -94,7 +94,7 @@ export default function BannerForm({ params }: { params: { id: string } }) {
           : 'O banner foi criado com sucesso.',
       });
       queryClient.invalidateQueries({ queryKey: ['banners'] });
-      router.push('/banners');
+      router.push('/dashboard/banners');
     },
     onError: (error) => {
       console.error('Erro ao salvar banner:', error);
@@ -130,7 +130,7 @@ export default function BannerForm({ params }: { params: { id: string } }) {
   }
 
   const goBack = () => {
-    router.push('/banners')
+    router.push('/dashboard/banners')
   }
 
   return (

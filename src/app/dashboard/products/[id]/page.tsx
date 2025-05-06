@@ -2,22 +2,22 @@
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { CategoryForm } from '@/components/categories/category-form'; 
+import { ProductForm } from '@/components/products/product-form'; 
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { categoryService } from '@/services/category-service';
-import { Category } from '@/types/category';
+import { productService } from '@/services/product-service';
+import { Product } from '@/types/product';
 
-export default function EditCategoryPage() {
+export default function EditProductPage() {
   const params = useParams();
-  const categoryId = params.id as string;
+  const productId = params.id as string;
   
-  const { data: category, isLoading, error } = useQuery<Category>({
-    queryKey: ['category', categoryId],
-    queryFn: () => categoryService.get(categoryId),
-    enabled: !!categoryId && categoryId !== 'novo',
+  const { data: product, isLoading, error } = useQuery<Product>({
+    queryKey: ['product', productId],
+    queryFn: () => productService.get(productId),
+    enabled: !!productId && productId !== 'novo',
   });
 
   if (isLoading) {
@@ -39,15 +39,15 @@ export default function EditCategoryPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
-        <Link href="/categories">
+        <Link href="/dashboard/products">
           <Button variant="ghost" size="icon">
             <ArrowLeft className="h-5 w-5" />
           </Button>
         </Link>
-        <h1 className="text-2xl font-bold">Editar Categoria</h1>
+        <h1 className="text-2xl font-bold">Editar Produto</h1>
       </div>
       
-      <CategoryForm category={category} />
+      <ProductForm product={product} />
     </div>
   );
 }

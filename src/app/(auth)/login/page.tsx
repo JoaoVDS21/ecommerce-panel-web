@@ -13,7 +13,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.push('/products');
+      router.push('/dashboard/products');
     }
   }, [isAuthenticated, router]);
 

@@ -4,45 +4,44 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ProductsList } from '@/components/products/products-list';
+import { CategoriesList } from '@/components/categories/categories-list';
 import { Plus, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { productService } from '@/services/product-service';
-import { Product } from '@/types/product';
+import { categoryService } from '@/services/category-service';
+import { Category } from '@/types/category';
 
-export default function ProductsPage() {
+export default function CategoriesPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   
-  const { data: products, isLoading, error } = useQuery<Product[]>({
-    queryKey: ['products'],
-    queryFn: () => productService.getAll(),
+  const { data: categories, isLoading, error } = useQuery<Category[]>({
+    queryKey: ['categories'],
+    queryFn: () => categoryService.getAll(),
   });
   
-  const filteredProducts = products?.filter(
-    (product) => 
-      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCategories = categories?.filter(
+    (category) => 
+      category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold"></h1>
-        <h1 className="text-2xl font-bold">Produtos</h1>
+        <h1 className="text-2xl font-bold">Categorias</h1>
         <Button 
-          onClick={() => router.push('/products/new')}
+          onClick={() => router.push('/dashboard/categories/new')}
           className="flex items-center gap-2"
         >
           <Plus size={16} />
-          Novo Produto
+          Nova Categoria
         </Button>
       </div>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
         <Input
-          placeholder="Buscar produtos..."
+          placeholder="Buscar categorias..."
           className="pl-10"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -55,10 +54,10 @@ export default function ProductsPage() {
         </div>
       ) : error ? (
         <div className="p-4 rounded-md bg-red-50 text-red-700">
-          Erro ao carregar produtos. Por favor, tente novamente.
+          Erro ao carregar categorias. Por favor, tente novamente.
         </div>
       ) : (
-        <ProductsList products={filteredProducts || []} />
+        <CategoriesList categories={filteredCategories || []} />
       )}
     </div>
   );

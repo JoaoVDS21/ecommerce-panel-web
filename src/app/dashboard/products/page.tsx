@@ -4,44 +4,45 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ProductsList } from '@/components/products/products-list';
 import { Plus, Search } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { bannerService } from '@/services/banner-service';
-import { Banner } from '@/types/banner';
-import { BannersList } from '@/components/banners/banners-list';
+import { productService } from '@/services/product-service';
+import { Product } from '@/types/product';
 
-export default function bannersPage() {
+export default function ProductsPage() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState('');
   
-  const { data: banners, isLoading, error } = useQuery<Banner[]>({
-    queryKey: ['banners'],
-    queryFn: () => bannerService.getAll(),
+  const { data: products, isLoading, error } = useQuery<Product[]>({
+    queryKey: ['products'],
+    queryFn: () => productService.getAll(),
   });
   
-  const filteredbanners = banners?.filter(
-    (banner) => 
-      banner.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredProducts = products?.filter(
+    (product) => 
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold"></h1>
-        <h1 className="text-2xl font-bold">Banners</h1>
+        <h1 className="text-2xl font-bold">Produtos</h1>
         <Button 
-          onClick={() => router.push('/banners/new')}
+          onClick={() => router.push('/dashboard/products/new')}
           className="flex items-center gap-2"
         >
           <Plus size={16} />
-          Novo Banner
+          Novo Produto
         </Button>
       </div>
 
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
         <Input
-          placeholder="Buscar banners..."
+          placeholder="Buscar produtos..."
           className="pl-10"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -54,10 +55,10 @@ export default function bannersPage() {
         </div>
       ) : error ? (
         <div className="p-4 rounded-md bg-red-50 text-red-700">
-          Erro ao carregar banners. Por favor, tente novamente.
+          Erro ao carregar produtos. Por favor, tente novamente.
         </div>
       ) : (
-        <BannersList banners={filteredbanners || []} />
+        <ProductsList products={filteredProducts || []} />
       )}
     </div>
   );

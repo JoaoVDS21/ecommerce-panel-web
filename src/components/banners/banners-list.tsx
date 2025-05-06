@@ -66,7 +66,7 @@ export function BannersList({ banners }: BannerListProps) {
 
   // Redirecionar para a tela de edição
   const handleRowClick = (id: number) => {
-    router.push(`/banners/${id}`)
+    router.push(`/dashboard/banners/${id}`)
   }
 
   return (
@@ -118,7 +118,7 @@ export function BannersList({ banners }: BannerListProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => router.push(`/banners/${banner.id}`)}
+                        onClick={() => router.push(`/dashboard/banners/${banner.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>

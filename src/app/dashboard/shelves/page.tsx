@@ -30,7 +30,7 @@ export default function ShelvesPage() {
         <h1 className="text-2xl font-bold"></h1>
         <h1 className="text-2xl font-bold">Prateleiras</h1>
         <Button 
-          onClick={() => router.push('/shelves/new')}
+          onClick={() => router.push('/dashboard/shelves/new')}
           className="flex items-center gap-2"
         >
           <Plus size={16} />
