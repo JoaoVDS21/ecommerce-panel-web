@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 
 interface ProductListProps {
   products: Product[];
@@ -34,10 +35,10 @@ interface ProductListProps {
 export function ProductsList({ products }: ProductListProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [productToDelete, setProductToDelete] = useState<string | number | null>(null);
 
   const { mutate: deleteProduct } = useMutation({
-    mutationFn: (id: string) => productService.delete(id),
+    mutationFn: (id: string | number) => productService.delete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['products'] });
       toast.success('Produto excluído', {
@@ -52,7 +53,7 @@ export function ProductsList({ products }: ProductListProps) {
     },
   });
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string | number) => {
     setProductToDelete(id);
   };
 
@@ -78,6 +79,7 @@ export function ProductsList({ products }: ProductListProps) {
               <TableHead>Nome</TableHead>
               <TableHead>Preço</TableHead>
               <TableHead>Estoque</TableHead>
+              <TableHead className='w-24'>Status</TableHead>
               <TableHead className="w-[100px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -94,6 +96,11 @@ export function ProductsList({ products }: ProductListProps) {
                   <TableCell>{product.name}</TableCell>
                   <TableCell>{formatPrice(product.price)}</TableCell>
                   <TableCell>{product.stock}</TableCell>
+                  <TableCell>
+                    <Badge variant={product.isActive ? "default" : "outline"}>
+                      {product.isActive ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button

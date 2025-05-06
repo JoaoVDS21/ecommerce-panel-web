@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Package, Grid, Rows3 } from 'lucide-react';
+import { Package, Grid, Rows3, Images } from 'lucide-react';
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -23,6 +23,11 @@ export function Sidebar() {
       name: 'Prateleiras',
       href: '/shelves',
       icon: Rows3,
+    },
+    {
+      name: 'Banners',
+      href: '/banners',
+      icon: Images,
     },
   ];
 

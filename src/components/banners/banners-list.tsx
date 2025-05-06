@@ -12,9 +12,9 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
-import { Shelf } from '@/types/shelf'; 
+import { Banner } from '@/types/banner'; 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { shelfService } from '@/services/shelf-service';
+import { bannerService } from '@/services/banner-service';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,41 +27,47 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
 import { Badge } from '../ui/badge';
+import Image from 'next/image';
 
-interface ShelfListProps {
-  shelves: Shelf[];
+interface BannerListProps {
+  banners: Banner[];
 }
 
-export function ShelvesList({ shelves }: ShelfListProps) {
+export function BannersList({ banners }: BannerListProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [shelfToDelete, setShelfToDelete] = useState<string | number | null>(null);
+  const [bannerToDelete, setBannerToDelete] = useState<string | number | null>(null);
 
-  const { mutate: deleteShelf } = useMutation({
-    mutationFn: (id: string | number) => shelfService.delete(id),
+  const { mutate: deleteBanner } = useMutation({
+    mutationFn: (id: string | number) => bannerService.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['shelves'] });
-      toast.success('Prateleira excluída', {
-        description: 'A prateleira foi excluída com sucesso.'
+      queryClient.invalidateQueries({ queryKey: ['banners'] });
+      toast.success('Banner excluído', {
+        description: 'O banner foi excluído com sucesso.'
       });
-      setShelfToDelete(null);
+      setBannerToDelete(null);
     },
     onError: () => {
       toast.error('Erro ao excluir', {
-        description: 'Não foi possível excluir a prateleira.'
+        description: 'Não foi possível excluir o banner.'
       });
     },
   });
 
   const handleDelete = (id: string | number) => {
-    setShelfToDelete(id);
+    setBannerToDelete(id);
   };
 
   const confirmExclude = () => {
-    if (shelfToDelete) {
-      deleteShelf(shelfToDelete);
+    if (bannerToDelete) {
+      deleteBanner(bannerToDelete);
     }
   };
+
+  // Redirecionar para a tela de edição
+  const handleRowClick = (id: number) => {
+    router.push(`/banners/${id}`)
+  }
 
   return (
     <>
@@ -69,27 +75,42 @@ export function ShelvesList({ shelves }: ShelfListProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Nome</TableHead>
-              <TableHead>Posição</TableHead>
-              <TableHead className='w-24'>Status</TableHead>
+              <TableHead className="w-16">Preview</TableHead>
+              <TableHead>Título</TableHead>
+              <TableHead className="w-24">Posição</TableHead>
+              <TableHead className="w-24">Status</TableHead>
               <TableHead className="w-[100px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {shelves.length === 0 ? (
+            {banners.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center py-4">
-                  Nenhum prateleira encontrada.
+                  Nenhum banner encontrado.
                 </TableCell>
               </TableRow>
             ) : (
-              shelves.map((shelf) => (
-                <TableRow key={shelf.id}>
-                  <TableCell>{shelf.title}</TableCell>
-                  <TableCell>{shelf.position}</TableCell>
+              banners.map((banner) => (
+                <TableRow 
+                  key={banner.id} 
+                  onClick={() => handleRowClick(banner.id)}
+                  className="cursor-pointer hover:bg-muted"
+                >
                   <TableCell>
-                    <Badge variant={shelf.isActive ? "default" : "outline"}>
-                      {shelf.isActive ? 'Ativo' : 'Inativo'}
+                    <div className="relative w-16 h-10 rounded-md overflow-hidden">
+                      <Image
+                        src={banner.imageUrl} 
+                        alt={banner.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="font-medium">{banner.title}</TableCell>
+                  <TableCell>{banner.position}</TableCell>
+                  <TableCell>
+                    <Badge variant={banner.isActive ? "default" : "outline"}>
+                      {banner.isActive ? 'Ativo' : 'Inativo'}
                     </Badge>
                   </TableCell>
                   <TableCell>
@@ -97,7 +118,7 @@ export function ShelvesList({ shelves }: ShelfListProps) {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => router.push(`/shelves/${shelf.id}`)}
+                        onClick={() => router.push(`/banners/${banner.id}`)}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
@@ -105,7 +126,7 @@ export function ShelvesList({ shelves }: ShelfListProps) {
                         variant="outline"
                         size="icon"
                         className="text-red-500 hover:text-red-600"
-                        onClick={() => handleDelete(shelf.id)}
+                        onClick={() => handleDelete(banner.id)}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -118,7 +139,7 @@ export function ShelvesList({ shelves }: ShelfListProps) {
         </Table>
       </div>
 
-      <AlertDialog open={!!shelfToDelete} onOpenChange={(open: boolean) => !open && setShelfToDelete(null)}>
+      <AlertDialog open={!!bannerToDelete} onOpenChange={(open: boolean) => !open && setBannerToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Excluir prateleira</AlertDialogTitle>

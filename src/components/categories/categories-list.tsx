@@ -26,6 +26,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'sonner';
+import { Badge } from '../ui/badge';
 
 interface CategoryListProps {
   categories: Category[];
@@ -41,7 +42,7 @@ export function CategoriesList({ categories }: CategoryListProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
       toast.success('Categoria excluída', {
-        description: 'O categoria foi excluída com sucesso.'
+        description: 'A categoria foi excluída com sucesso.'
       });
       setCategoryToDelete(null);
     },
@@ -69,6 +70,7 @@ export function CategoriesList({ categories }: CategoryListProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Nome</TableHead>
+              <TableHead className="w-24">Status</TableHead>
               <TableHead className="w-[100px]">Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -83,6 +85,11 @@ export function CategoriesList({ categories }: CategoryListProps) {
               categories.map((category) => (
                 <TableRow key={category.id}>
                   <TableCell>{category.name}</TableCell>
+                  <TableCell>
+                    <Badge variant={category.isActive ? "default" : "outline"}>
+                      {category.isActive ? 'Ativo' : 'Inativo'}
+                    </Badge>
+                  </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
                       <Button

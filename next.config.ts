@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
   },
   // Configurações para imagens externas
   images: {
-    domains: ['via.placeholder.com', 'placekitten.com'],
+    domains: ['via.placeholder.com', 'placekitten.com', 'localhost'],
   },
 };
 

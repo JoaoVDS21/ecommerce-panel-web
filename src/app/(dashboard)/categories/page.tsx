@@ -34,7 +34,7 @@ export default function CategoriesPage() {
           className="flex items-center gap-2"
         >
           <Plus size={16} />
-          Novo Categoria
+          Nova Categoria
         </Button>
       </div>
 

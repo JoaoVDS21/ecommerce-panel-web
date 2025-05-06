@@ -2,13 +2,10 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/stores/auth-store';
 import { useTenantStore } from '@/stores/tenant-store';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+export const baseURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 const apiClient: AxiosInstance = axios.create({
-  baseURL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL
 });
 
 // Interceptor de requisição para adicionar token JWT e tenant ID
@@ -59,11 +56,11 @@ export const createService = <T>(endpoint: string) => {
       const response = await apiClient.get<T>(`${endpoint}/${id}`, config);
       return response.data;
     },
-    create: async (data: Partial<T>, config?: AxiosRequestConfig) => {
+    create: async (data: Partial<T> | FormData, config?: AxiosRequestConfig) => {
       const response = await apiClient.post<T>(endpoint, data, config);
       return response.data;
     },
-    update: async (id: string | number, data: Partial<T>, config?: AxiosRequestConfig) => {
+    update: async (id: string | number, data: Partial<T> | FormData, config?: AxiosRequestConfig) => {
       const response = await apiClient.put<T>(`${endpoint}/${id}`, data, config);
       return response.data;
     },
